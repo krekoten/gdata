@@ -61,10 +61,11 @@ module GData
       end
       
       # Authorize using authorized request token
-      def authorize_from_request req_token, req_secret, verifier
+      def authorize_from_request req_token, req_secret, verifier = nil
         request_token = ::OAuth::RequestToken.new(consumer, req_token, req_secret)
         # Gogole requires content type to be "Content-Type: application/x-www-form-urlencoded"
-        access_token = request_token.get_access_token({:oauth_verifier => verifier}, nil, {'Content-Type' => 'application/x-www-form-urlencoded'})
+        params = verifier ? {:oauth_verifier => verifier} : nil
+        access_token = request_token.get_access_token(params, nil, {'Content-Type' => 'application/x-www-form-urlencoded'})
         @atoken, @asecret = access_token.token, access_token.secret
       end
       
