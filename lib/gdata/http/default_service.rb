@@ -64,6 +64,10 @@ module GData
           req[key] = value
         end
         
+        # TODO: move sign code to auth adapter
+        # Support for OAuth gem sign!
+        request.consumer.sign! req, request.token if request.respond_to?(:consumer)
+        
         request.calculate_length!
         
         res = http.request(req)

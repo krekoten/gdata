@@ -20,7 +20,8 @@ module GData
       
       def initialize(options = {})
         options[:clientlogin_service] ||= 'cp'
-        options[:authsub_scope] ||= 'http://www.google.com/m8/feeds/' 
+        options[:authsub_scope] ||= 'http://www.google.com/m8/feeds/'
+        options[:oauth_scope] ||= 'https://www.google.com/m8/feeds/'
         super(options)
       end
     end

@@ -12,11 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require 'forwardable'
+
 module GData
   module Client
     
     # A client object used to interact with different Google Data APIs.
     class Base
+      
+      extend Forwardable
     
       # A subclass of GData::Auth that handles authentication signing.
       attr_accessor :auth_handler
@@ -33,10 +37,14 @@ module GData
       # The broadest AuthSub scope for working with an API.
       # This is overriden by the service-specific subclasses.
       attr_accessor :authsub_scope
+      # The broadest OAuth scope for working with an API.
+      # This is overriden by the service-specific subclasses.
+      attr_accessor :oauth_scope
       # A short string identifying the current application.
       attr_accessor :source
       
       def initialize(options = {})
+        options[:oauth_scope] ||= options[:authsub_scope]
         options.each do |key, value|
           self.send("#{key}=", value)
         end
@@ -177,6 +185,18 @@ module GData
           raise Error, "An AuthSub token must be set first."
         end
       end
+      
+      # Sets up OAuth to be used with service
+      # pass :atoken, :asecret as options to set authorized access token
+      def oauth api_key, api_secret, options = {}
+        self.auth_handler = GData::Auth::OAuth.new api_key, api_secret
+        self.auth_handler.authorize_from_access options[:atoken], options[:asecret] if options[:atoken] && options[:asecret]
+        
+        self.auth_handler
+      end
+      
+      def_delegators :auth_handler, :authorize_url, :request_token, :access_token, :authorize_from_request, :authorize_from_access
+      
     end
   end
 end

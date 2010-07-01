@@ -14,6 +14,7 @@
 
 require 'gdata/auth/clientlogin'
 require 'gdata/auth/authsub'
+require 'gdata/auth/oauth'
 
 module GData
   module Auth
