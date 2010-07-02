@@ -30,7 +30,7 @@ module GData
       # :domain - Domain which is requesting permissions
       def authorize_url_with_buzz options = {}
         options[:scope]   ||= @oauth_scope
-        options[:domain]  ||= @api_key
+        options[:domain]  ||= self.auth_handler.api_key
         options.inject(authorize_url_without_buzz) do |res, (key, value)|
           res << '&' + CGI.escape(key.to_s) + '=' + CGI.escape(value.to_s)
         end
