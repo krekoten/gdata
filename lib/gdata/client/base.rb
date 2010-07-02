@@ -188,14 +188,20 @@ module GData
       
       # Sets up OAuth to be used with service
       # pass :atoken, :asecret as options to set authorized access token
-      def oauth api_key, api_secret, options = {}
-        self.auth_handler = GData::Auth::OAuth.new api_key, api_secret
+      def oauth! api_key, api_secret, options = {}
+        _oauth_handler!
         self.auth_handler.authorize_from_access options[:atoken], options[:asecret] if options[:atoken] && options[:asecret]
         
         self.auth_handler
       end
       
       def_delegators :auth_handler, :authorize_url, :request_token, :access_token, :authorize_from_request, :authorize_from_access
+      
+      private
+      
+      def _oauth_handler!
+        self.auth_handler = GData::Auth::OAuth.new api_key, api_secret
+      end
       
     end
   end

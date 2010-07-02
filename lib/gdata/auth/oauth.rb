@@ -23,26 +23,32 @@ module GData
       
       def_delegators :request_token, :authorize_url
       
-      BASE_URL            = 'https://www.google.com'
+      attr_accessor :base_url, :request_token_url, :authorize_token_url, :access_token_url
       
-      REQUEST_TOKEN_URL   = '/accounts/OAuthGetRequestToken'
-      AUTHORIZE_TOKEN_URL = '/accounts/OAuthAuthorizeToken'
-      ACCESS_TOKEN_URL    = '/accounts/OAuthGetAccessToken'
+      @base_url            = 'https://www.google.com'
+      
+      @request_token_url   = '/accounts/OAuthGetRequestToken'
+      @authorize_token_url = '/accounts/OAuthAuthorizeToken'
+      @access_token_url    = '/accounts/OAuthGetAccessToken'
       
       attr_accessor :api_key, :api_secret
       
-      def initialize api_key, api_secret
+      def initialize api_key, api_secret, options = {}
         @api_key = api_key
         @api_secret = api_secret
+        
+        options.each do |option, value|
+          send "#{option}=", value if respond_to? "#{option}="
+        end unless option.empty?
       end
 
       # Get consumer
       def consumer
         @consumer ||= ::OAuth::Consumer.new(api_key, api_secret, {
-          :site               => BASE_URL,
-          :request_token_path => REQUEST_TOKEN_URL,
-          :access_token_path  => ACCESS_TOKEN_URL,
-          :authorize_path     => AUTHORIZE_TOKEN_URL
+          :site               => @base_url,
+          :request_token_path => @request_token_url,
+          :access_token_path  => @access_token_url,
+          :authorize_path     => @authorize_token_url
         })
       end
       
@@ -64,7 +70,7 @@ module GData
       def authorize_from_request req_token, req_secret, verifier = nil
         request_token = ::OAuth::RequestToken.new(consumer, req_token, req_secret)
         # Gogole requires content type to be "Content-Type: application/x-www-form-urlencoded"
-        params = verifier ? {:oauth_verifier => verifier} : nil
+        params = verifier ? {:oauth_verifier => verifier} : {}
         access_token = request_token.get_access_token(params, nil, {'Content-Type' => 'application/x-www-form-urlencoded'})
         @atoken, @asecret = access_token.token, access_token.secret
       end
