@@ -39,7 +39,7 @@ module GData
         
         options.each do |option, value|
           send "#{option}=", value if respond_to? "#{option}="
-        end unless option.empty?
+        end unless options.empty?
       end
 
       # Get consumer
