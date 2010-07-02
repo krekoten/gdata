@@ -23,6 +23,22 @@ module GData
         super options
       end
       
+      
+      # Buzz requires scope and domain params to be present in authorize_url
+      # you can override them with
+      # :scope - Scope for Buzz
+      # :domain - Domain which is requesting permissions
+      def authorize_url_with_buzz options = {}
+        options[:scope]   ||= @oauth_scope
+        options[:domain]  ||= @api_key
+        options.inject(authorize_url_without_buzz) do |res, (key, value)|
+          res << '&' + CGI.escape(key.to_s) + '=' + CGI.escape(value.to_s)
+        end
+      end
+      
+      alias_method :authorize_url_without_buzz, :authorize_url
+      alias_method :authorize_url, :authorize_url_with_buzz
+      
       private
       
       def _oauth_handler! api_key, api_secret
