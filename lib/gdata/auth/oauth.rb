@@ -23,7 +23,7 @@ module GData
       
       def_delegators :request_token, :authorize_url
       
-      attr_accessor :base_url, :request_token_url, :authorize_token_url, :access_token_url
+      attr_accessor :base_url, :request_token_url, :authorize_token_url, :access_token_url, :scope
       
       attr_accessor :api_key, :api_secret
       
@@ -56,7 +56,7 @@ module GData
       # :scope          => String, URL identifying the service(s) to be accessed
       def request_token options = {}
         arguments = {}
-        arguments[:scope] = options.delete(:scope) if options[:scope]
+        arguments[:scope] = options.delete(:scope) || @scope
         
         @request_token ||= consumer.get_request_token(options, arguments)
       end

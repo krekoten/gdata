@@ -46,7 +46,10 @@ module GData
           api_key,
           api_secret,
           # Buzz requires different authorization endpoint
-          {:authorize_token_url => '/buzz/api/auth/OAuthAuthorizeToken'}
+          {
+            :authorize_token_url  => '/buzz/api/auth/OAuthAuthorizeToken',
+            :scope                => @oauth_scope
+          }
         )
       end
     end
