@@ -197,6 +197,14 @@ module GData
       
       def_delegators :auth_handler, :authorize_url, :request_token, :access_token, :authorize_from_request, :authorize_from_access
       
+      def request_token_with_scope options = {}
+        options[:scope] ||= oauth_scope
+        request_token_without_scope options
+      end
+      
+      alias_method :request_token_without_scope, :request_token
+      alias_method :request_token, :request_token_with_scope
+      
       private
       
       def _oauth_handler! api_key, api_secret

@@ -57,9 +57,6 @@ module GData
       def request_token options = {}
         arguments = {}
         arguments[:scope] = options.delete(:scope) if options[:scope]
-        # Buzz specific options
-        arguments[:domain] = options.delete(:domain) if options[:domain]
-        arguments[:iconUrl] = options.delete(:iconUrl) if options[:iconUrl]
         
         @request_token ||= consumer.get_request_token(options, arguments)
       end
