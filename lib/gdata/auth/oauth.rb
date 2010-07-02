@@ -25,12 +25,6 @@ module GData
       
       attr_accessor :base_url, :request_token_url, :authorize_token_url, :access_token_url
       
-      @base_url            = 'https://www.google.com'
-      
-      @request_token_url   = '/accounts/OAuthGetRequestToken'
-      @authorize_token_url = '/accounts/OAuthAuthorizeToken'
-      @access_token_url    = '/accounts/OAuthGetAccessToken'
-      
       attr_accessor :api_key, :api_secret
       
       def initialize api_key, api_secret, options = {}
@@ -40,6 +34,11 @@ module GData
         options.each do |option, value|
           send "#{option}=", value if respond_to? "#{option}="
         end unless options.empty?
+        
+        @base_url            ||= 'https://www.google.com'
+        @request_token_url   ||= '/accounts/OAuthGetRequestToken'
+        @authorize_token_url ||= '/accounts/OAuthAuthorizeToken'
+        @access_token_url    ||= '/accounts/OAuthGetAccessToken'
       end
 
       # Get consumer
