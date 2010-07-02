@@ -25,7 +25,7 @@ module GData
       
       private
       
-      def _oauth_handler!
+      def _oauth_handler! api_key, api_secret
         self.auth_handler = GData::Auth::OAuth.new(
           api_key,
           api_secret,
